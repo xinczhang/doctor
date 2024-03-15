@@ -23,7 +23,7 @@
 						<div class="text-subtitle2 q-mb-sm text-red-14 text-weight-bold">
 							<q-icon
 								name="error_outline"
-								class="q-mr-sm"
+								class="q-mr-sm icon-align-fix"
 							/>风险提示
 						</div>
 						<ol class="q-pl-md q-ma-none text-body2 text-grey-6">
