@@ -149,6 +149,16 @@ defineOptions({ name: 'Page.SmallCasebook' });
 		font-size: 16px;
 	}
 
+	&::before {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 210px;
+		background: linear-gradient(51.58deg, #ffffff 0%, #d2efff 100%);
+	}
+
 	#identification {
 		background-color: transparent;
 
@@ -165,17 +175,9 @@ defineOptions({ name: 'Page.SmallCasebook' });
 		}
 	}
 
-	&::before {
-		content: '';
-		display: block;
-		position: absolute;
-		top: 0;
-		width: 100%;
-		height: 280px;
-		background: linear-gradient(51.58deg, #ffffff 0%, #d2efff 100%);
-	}
-
 	#profile {
+		background-color: rgba(255, 255, 255, 0.8);
+
 		#profile-heading {
 			background: linear-gradient(
 				180deg,
