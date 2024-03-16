@@ -2,6 +2,7 @@
 	<q-layout
 		view="lHh Lpr lFf"
 		id="page-small-casebook"
+		@scroll="setHeaderBackground"
 	>
 		<q-header
 			bordered
@@ -104,13 +105,12 @@
 				</q-card>
 			</q-page>
 		</q-page-container>
-		<q-scroll-observer @scroll="setHeaderBackground" />
 	</q-layout>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { QScrollObserverProps } from 'quasar';
+import { QLayoutProps } from 'quasar';
 
 import ProfileItem from './ProfileItem.vue';
 import DetailItem from './DetailItem.vue';
@@ -118,7 +118,15 @@ import DetailItem from './DetailItem.vue';
 import profileList from './sample/profile.json';
 import details from './sample/detail.json';
 
-const DETAIL_ITEM_LIST = [
+const DETAIL_ITEM_LIST: [
+	'issue',
+	'current',
+	'history',
+	'marriage',
+	'family',
+	'immunization',
+	'suggestion',
+] = [
 	'issue',
 	'current',
 	'history',
@@ -130,8 +138,8 @@ const DETAIL_ITEM_LIST = [
 
 const scrolled = ref(false);
 
-const setHeaderBackground: QScrollObserverProps['onScroll'] = (info) => {
-	scrolled.value = info.position.top > 20;
+const setHeaderBackground: QLayoutProps['onScroll'] = (info) => {
+	scrolled.value = info.position > 20;
 };
 
 defineOptions({ name: 'Page.SmallCasebook' });

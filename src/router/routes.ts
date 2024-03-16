@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
 	{
 		name: 'app.interaction',
 		path: '/interaction',
-		component: () => import('pages/Interaction.vue'),
+		component: () => import('pages/Interaction/Page.vue'),
 	},
 
 	// Always leave this as last one,
