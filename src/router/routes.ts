@@ -8,15 +8,18 @@ const routes: RouteRecordRaw[] = [
 			name: 'app.index',
 			path: '',
 			component: () => import('pages/IndexPage.vue'),
-		}, {
-			name: 'app.diagnosis',
-			path: 'diagnosis',
-			component: () => import('pages/Diagnosis.vue'),
-		}, {
-			name: 'app.interaction',
-			path: 'interaction',
-			component: () => import('pages/Interaction.vue'),
 		}],
+	},
+
+	{
+		name: 'app.small.casebook',
+		path: '/diagnosis',
+		component: () => import('pages/SmallCasebook/Page.vue'),
+	},
+	{
+		name: 'app.interaction',
+		path: '/interaction',
+		component: () => import('pages/Interaction.vue'),
 	},
 
 	// Always leave this as last one,
