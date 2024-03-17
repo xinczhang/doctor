@@ -2,3 +2,59 @@
 .icon-align-fix {
 	vertical-align: -0.15em;
 }
+
+.compact-form-input.q-field {
+	input {
+		padding: 0 10px !important;
+		background-color: #f7f7f7 !important;
+		width: 70% !important;
+		border-radius: 6px !important;
+	}
+
+	.q-field__control {
+		border-radius: 6px !important;
+		padding-left: 4px !important;
+		padding-right: 4px !important;
+	}
+
+	.q-field__control-container {
+		height: 32px !important;
+		margin-top: 4px !important;
+		flex-direction: row-reverse !important;
+	}
+
+	.q-field__label {
+		width: 30% !important;
+		position: static !important;
+		transform: none !important;
+		transition: none !important;
+		line-height: 32px !important;
+		text-align: center !important;
+	}
+}
+
+.classical-form-input.q-field {
+	input {
+		padding: 0 10px !important;
+		background-color: #f7f7f7 !important;
+		border-radius: 6px !important;
+	}
+
+	.q-field__control {
+		height: 56px;
+		border-radius: 6px !important;
+		padding: 0 !important;
+
+		.q-field__control-container {
+			height: 32px;
+			margin-top: 24px !important;
+		}
+	}
+
+	.q-field__label {
+		top: -20px;
+		transform: none !important;
+		transition: none !important;
+		text-align: center !important;
+	}
+}
