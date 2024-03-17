@@ -186,6 +186,24 @@
 						></q-input>
 					</div>
 				</div>
+
+				<symptom-item
+					class="q-mt-sm"
+					label="患者主诉："
+					:value="casebook.symptom.issue"
+				/>
+
+				<symptom-item
+					class="q-mt-sm"
+					label="现病史："
+					:value="casebook.symptom.current"
+				/>
+
+				<symptom-item
+					class="q-mt-sm"
+					label="既往史："
+					:value="casebook.symptom.history"
+				/>
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -194,6 +212,7 @@
 <script setup lang="ts">
 import { date } from 'quasar';
 
+import SymptomItem from './SymptomItem.vue';
 import casebook from './sample/profile.json';
 
 const MASK = 'YYYY-MM-DD HH:mm';
