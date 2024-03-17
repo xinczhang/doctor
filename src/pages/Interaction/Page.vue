@@ -74,7 +74,6 @@
 						class="q-mt-md q-mb-xs"
 						:text="[message.content]"
 						:bg-color="message.bot ? 'white' : 'grey-4'"
-						size="8"
 						:name="message.who"
 						:sent="!message.bot"
 						:text-html="message.bot"
@@ -94,7 +93,7 @@
 							v-if="message.pending"
 							v-slot:default
 						>
-							<div class="text-right text-grey-7">正在分析您的语音...</div>
+							<div class="text-center text-grey-7">正在分析您的语音...</div>
 						</template>
 
 						<template

@@ -13,13 +13,18 @@ const routes: RouteRecordRaw[] = [
 
 	{
 		name: 'app.small.casebook',
-		path: '/diagnosis',
+		path: '/casebook/small',
 		component: () => import('pages/SmallCasebook/Page.vue'),
 	},
 	{
 		name: 'app.interaction',
 		path: '/interaction',
 		component: () => import('pages/Interaction/Page.vue'),
+	},
+	{
+		name: 'app.large.casebook',
+		path: '/casebook/large',
+		component: () => import('pages/LargeCasebook/Page.vue'),
 	},
 
 	// Always leave this as last one,
