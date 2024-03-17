@@ -25,9 +25,6 @@
 		"heat": 36.2,
 		"pulse": 74,
 		"breathe": 18,
-		"pressure": {
-			"high": 135,
-			"low": 63
-		}
+		"pressure": "135/63"
 	}
 }

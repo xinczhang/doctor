@@ -188,7 +188,7 @@
 				</div>
 
 				<symptom-item
-					class="q-mt-sm"
+					class="q-mt-lg"
 					label="患者主诉："
 					:value="casebook.symptom.issue"
 				/>
@@ -204,6 +204,30 @@
 					label="既往史："
 					:value="casebook.symptom.history"
 				/>
+
+				<div class="row symptom-item q-pa-sm q-mt-sm">
+					<div class="col-2 text-weight-bold">
+						<div>体格检查：</div>
+						<q-btn
+							icon="mic"
+							dense
+							outline
+							size="sm"
+							color="grey-6"
+							class="bg-grey-1"
+						></q-btn>
+					</div>
+
+					<div class="col row q-col-gutter-sm">
+						<index-item
+							class="col-3"
+							v-for="item in INDEX_LIST"
+							:key="item.name"
+							:label="item.label"
+							:value="String(casebook.index[item.name])"
+						/>
+					</div>
+				</div>
 			</q-page>
 		</q-page-container>
 	</q-layout>
@@ -213,6 +237,7 @@
 import { date } from 'quasar';
 
 import SymptomItem from './SymptomItem.vue';
+import IndexItem from './IndexItem.vue';
 import casebook from './sample/profile.json';
 
 const MASK = 'YYYY-MM-DD HH:mm';
@@ -220,6 +245,18 @@ const MASK = 'YYYY-MM-DD HH:mm';
 function toLocalString(isoString: string) {
 	return date.formatDate(new Date(isoString).getTime(), MASK);
 }
+
+type IndexName = 'heat' | 'pulse' | 'breathe' | 'pressure';
+
+const INDEX_LIST: {
+	name: IndexName;
+	label: string;
+}[] = [
+	{ name: 'heat', label: '体温（℃）' },
+	{ name: 'pulse', label: '心率（次/分）' },
+	{ name: 'breathe', label: '呼吸（次/分）' },
+	{ name: 'pressure', label: '血压（mmHg）' },
+];
 
 defineOptions({ name: 'Page.LargeCasebook' });
 </script>
