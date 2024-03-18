@@ -9,7 +9,6 @@
 				v-model="open"
 				:header-class="{
 					'text-weight-bold': true,
-					'text-h6': open,
 					'text-grey-8': !open,
 				}"
 			>
