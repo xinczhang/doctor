@@ -28,6 +28,7 @@
 					split
 					disable-main-btn
 					dropdown-icon="menu"
+					content-style="box-shadow: 0px 8px 20px 0px #0000001A;"
 				>
 					<q-list separator>
 						<q-item
@@ -100,7 +101,7 @@
 							v-if="index === 0"
 							v-slot:stamp
 						>
-							<div>
+							<div class="text-grey-8">
 								<q-icon
 									class="icon-align-fix q-mr-xs q-mt-xs"
 									name="help_outline"
@@ -114,10 +115,13 @@
 							v-if="!message.bot"
 							rounded
 							outline
-							padding="none xs"
+							padding="none sm none xs"
 							size="sm"
 							color="grey-8"
-							><q-icon name="refresh" />重说</q-btn
+							><q-icon
+								name="refresh"
+								class="flip-horizontal"
+							/>重说</q-btn
 						>
 					</div>
 				</template>
@@ -126,14 +130,18 @@
 			</q-page>
 		</q-page-container>
 
-		<q-footer bordered>
-			<q-toolbar>
+		<q-footer
+			bordered
+			class="no-border"
+		>
+			<q-toolbar class="q-pa-none">
 				<q-btn
 					@contextmenu.prevent
 					@touchstart.stop="listening = true"
 					@touchend.stop="appendMessage"
 					flat
 					class="full-width text-black text-h6"
+					style="line-height: 50px"
 					:class="{ gradient: listening }"
 					:icon="listening ? 'radio_button_checked' : 'mic'"
 					:label="listening ? '说话中...' : '点击后开始说话'"
@@ -200,8 +208,27 @@ defineOptions({ name: 'Page.InteractionPanel' });
 		background-image: linear-gradient(to right, #fff, #eee, #fff);
 	}
 
+	$bubble-blank: 48px;
+
+	.q-message-sent {
+		padding-left: $bubble-blank;
+		.q-message-text {
+			background-color: #cae2eb;
+		}
+	}
+
+	.q-message-name {
+		color: #bbb;
+	}
+
+	.q-message-received {
+		padding-right: $bubble-blank;
+	}
+
 	.q-message-text {
 		min-height: 0;
+
+		padding: 1em;
 
 		&::before {
 			content: none;
