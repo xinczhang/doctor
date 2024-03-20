@@ -68,19 +68,19 @@
 				class="q-pa-md"
 			>
 				<template
-					v-for="(message, index) in list"
+					v-for="(message, index) in messages"
 					:key="index"
 				>
 					<q-chat-message
 						class="q-mt-md q-mb-xs"
-						:text="[message.content]"
-						:bg-color="message.bot ? 'white' : 'grey-4'"
+						:text="[message.text]"
+						:bg-color="message.sent ? 'grey-4' : 'white'"
 						:name="message.who"
-						:sent="!message.bot"
-						:text-html="message.bot"
+						:sent="message.sent"
+						text-html
 					>
 						<template
-							v-if="message.bot"
+							v-if="!message.sent"
 							v-slot:name
 						>
 							<q-avatar
@@ -105,7 +105,7 @@
 
 					<div class="row items-end no-wrap reverse">
 						<q-btn
-							v-if="!message.bot"
+							v-if="message.sent"
 							rounded
 							outline
 							padding="none sm none xs"
@@ -129,6 +129,22 @@
 					stamp="正在分析您的语音..."
 					v-if="inputing !== null"
 				></q-chat-message>
+
+				<q-chat-message
+					class="q-mt-md q-mb-xs"
+					:text="[receivingText]"
+					bg-color="white"
+					text-html
+					v-if="receiving !== null"
+				>
+					<template v-slot:name>
+						<q-avatar
+							class="q-mb-xs"
+							size="32px"
+							><img src="/ai.jpg"
+						/></q-avatar>
+					</template>
+				</q-chat-message>
 				<div ref="bottom"></div>
 			</q-page>
 		</q-page-container>
@@ -148,6 +164,17 @@
 					:class="{ gradient: inputing !== null }"
 					:icon="inputing !== null ? 'radio_button_checked' : 'mic'"
 					:label="inputing !== null ? '说话中...' : '点击后开始说话'"
+					v-if="!locking"
+				/>
+				<q-btn
+					@contextmenu.prevent
+					disable
+					flat
+					class="full-width text-black text-h6"
+					style="line-height: 50px"
+					icon="pending"
+					label="正在分析..."
+					v-if="locking"
 				/>
 			</q-toolbar>
 		</q-footer>
@@ -157,28 +184,74 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { scroll } from 'quasar';
-import { Session, Recorder } from './Session';
+import { Session, Recorder, RecorderEvent } from './Session';
+
+interface Message {
+	sent: boolean;
+	who: string;
+	text: string;
+	audioURL: string;
+}
+
+const messages: Message[] = reactive([]);
+const bottom = ref<HTMLDivElement>(document.createElement('div'));
+const inputing = ref<Recorder | null>(null);
+const inputingText = ref<string>('');
+const receiving = ref<Recorder | null>(null);
+const receivingText = ref<string>('');
+const locking = ref(false);
+
+function scrollToBottom(duration: number = 0) {
+	scroll.setVerticalScrollPosition(window, bottom.value.offsetTop, duration);
+}
 
 const session = new Session();
 
-import messages from './sample/chat.json';
+function render() {
+	messages.splice(0);
 
-interface Message {
-	bot: boolean;
-	who: string;
-	content: string;
+	messages.push(
+		...session.messages.map((message) => {
+			return {
+				sent: message.sent,
+				who: message.who,
+				text: message.text,
+				audioURL: message.audioURL,
+			};
+		}),
+	);
 }
 
-const list: Message[] = reactive([...messages]);
-const bottom = ref<HTMLDivElement>(document.createElement('div'));
-const inputing = ref<Recorder | null>(null);
-const inputingText = ref<string>(' ');
+render();
+session.addEventListener('push-message', render);
+
+session.addEventListener('lock-change', () => {
+	locking.value = session.locking;
+});
+
+session.addEventListener('receiving', (event) => {
+	const recorderEvent = event as RecorderEvent;
+	const recorder = recorderEvent.recorder as Recorder;
+
+	receiving.value = recorder;
+
+	recorder.addEventListener('text-change', () => {
+		receivingText.value = recorder.text as string;
+		scrollToBottom();
+	});
+});
+
+session.addEventListener('received', () => {
+	receiving.value = null;
+	receivingText.value = '';
+});
 
 async function startInput() {
 	const recorder = session.sent('就诊人');
 
 	recorder.addEventListener('text-change', () => {
 		inputingText.value = recorder.text as string;
+		scrollToBottom();
 	});
 
 	inputingText.value = ' ';
@@ -195,7 +268,7 @@ async function appendMessage() {
 
 	await recorder.stop(true);
 	inputing.value = null;
-	scroll.setVerticalScrollPosition(window, bottom.value.offsetTop, 500);
+	scrollToBottom(500);
 }
 
 defineOptions({ name: 'Page.InteractionPanel' });
