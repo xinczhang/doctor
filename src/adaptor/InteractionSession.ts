@@ -8,7 +8,7 @@ export async function SpeechToText(audio: Blob, setText: TextSetter) {
 	const segments = [];
 
 	for (const word of [`${new Date().toISOString()}`].concat(MOCK_TEXT)) {
-		const delay = Math.trunc(Math.random() * 1000);
+		const delay = Math.trunc(Math.random() * 200);
 
 		await sleep(delay);
 		segments.push(word);
@@ -33,12 +33,15 @@ export async function OnSessionCreated(session: Session) {
 		const segments = [];
 
 		for (const word of [`${new Date().toISOString()}`].concat(MOCK_TEXT)) {
-			const delay = Math.trunc(Math.random() * 1000);
+			const delay = Math.trunc(Math.random() * 200);
 
 			await sleep(delay);
 			segments.push(word);
 			recorder.setText(segments.join(' '));
 		}
+
+		// 自动播放可以在这里实现成副作用
+		// https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement
 
 		recorder.setAudio(new Blob());
 		recorder.end();

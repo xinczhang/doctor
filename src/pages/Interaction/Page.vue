@@ -78,6 +78,7 @@
 						:name="message.who"
 						:sent="message.sent"
 						text-html
+						@click="playOrPause(message.audioURL)"
 					>
 						<template
 							v-if="!message.sent"
@@ -178,6 +179,11 @@
 				/>
 			</q-toolbar>
 		</q-footer>
+		<audio
+			ref="player"
+			class="invisible"
+			:src="playing"
+		></audio>
 	</q-layout>
 </template>
 
@@ -200,6 +206,22 @@ const inputingText = ref<string>('');
 const receiving = ref<Recorder | null>(null);
 const receivingText = ref<string>('');
 const locking = ref(false);
+const playing = ref<string>('');
+const player = ref<HTMLAudioElement>(document.createElement('audio'));
+
+async function playOrPause(audioURL: string) {
+	playing.value = audioURL;
+
+	const { value: audio } = player;
+
+	audio.load();
+
+	if (audio.readyState !== 4) {
+		await new Promise((resolve) => audio.addEventListener('canplay', resolve));
+	}
+
+	audio.play();
+}
 
 function scrollToBottom(duration: number = 0) {
 	scroll.setVerticalScrollPosition(window, bottom.value.offsetTop, duration);
