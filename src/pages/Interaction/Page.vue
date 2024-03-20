@@ -91,13 +91,6 @@
 						</template>
 
 						<template
-							v-if="message.pending"
-							v-slot:default
-						>
-							<div class="text-center text-grey-7">正在分析您的语音...</div>
-						</template>
-
-						<template
 							v-if="index === 0"
 							v-slot:stamp
 						>
@@ -126,6 +119,16 @@
 					</div>
 				</template>
 
+				<q-chat-message
+					class="q-mt-md q-mb-xs"
+					:text="[inputingText]"
+					bg-color="grey-4"
+					name="就诊人"
+					sent
+					text-html
+					stamp="正在分析您的语音..."
+					v-if="inputing !== null"
+				></q-chat-message>
 				<div ref="bottom"></div>
 			</q-page>
 		</q-page-container>
@@ -142,9 +145,9 @@
 					flat
 					class="full-width text-black text-h6"
 					style="line-height: 50px"
-					:class="{ gradient: listening }"
-					:icon="listening ? 'radio_button_checked' : 'mic'"
-					:label="listening ? '说话中...' : '点击后开始说话'"
+					:class="{ gradient: inputing !== null }"
+					:icon="inputing !== null ? 'radio_button_checked' : 'mic'"
+					:label="inputing !== null ? '说话中...' : '点击后开始说话'"
 				/>
 			</q-toolbar>
 		</q-footer>
@@ -154,9 +157,9 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { scroll } from 'quasar';
-import { Dialog } from 'src/adaptor/interaction';
+import { Session, Recorder } from './Session';
 
-const dialog = new Dialog();
+const session = new Session();
 
 import messages from './sample/chat.json';
 
@@ -164,31 +167,34 @@ interface Message {
 	bot: boolean;
 	who: string;
 	content: string;
-	pending: boolean;
 }
 
 const list: Message[] = reactive([...messages]);
-const listening = ref(false);
 const bottom = ref<HTMLDivElement>(document.createElement('div'));
+const inputing = ref<Recorder | null>(null);
+const inputingText = ref<string>(' ');
 
-function startInput() {
-	listening.value = true;
+async function startInput() {
+	const recorder = session.sent('就诊人');
 
-	const editor = dialog.input();
-
-	editor.startRecord();
-}
-
-function appendMessage() {
-	listening.value = false;
-
-	list.push({
-		bot: false,
-		pending: true,
-		who: '就诊人',
-		content: '',
+	recorder.addEventListener('text-change', () => {
+		inputingText.value = recorder.text as string;
 	});
 
+	inputingText.value = ' ';
+	inputing.value = recorder;
+	await recorder.start();
+}
+
+async function appendMessage() {
+	const { value: recorder } = inputing;
+
+	if (recorder === null) {
+		return;
+	}
+
+	await recorder.stop(true);
+	inputing.value = null;
 	scroll.setVerticalScrollPosition(window, bottom.value.offsetTop, 500);
 }
 
