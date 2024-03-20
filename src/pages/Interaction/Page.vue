@@ -42,7 +42,7 @@
 								/>
 							</q-item-section>
 							<q-item-section>
-								<q-item-label>上传病例</q-item-label>
+								<q-item-label>上传检查报告</q-item-label>
 							</q-item-section>
 						</q-item>
 
@@ -137,7 +137,7 @@
 			<q-toolbar class="q-pa-none">
 				<q-btn
 					@contextmenu.prevent
-					@touchstart.stop="listening = true"
+					@touchstart.stop="startInput"
 					@touchend.stop="appendMessage"
 					flat
 					class="full-width text-black text-h6"
@@ -154,6 +154,9 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { scroll } from 'quasar';
+import { Dialog } from 'src/adaptor/interaction';
+
+const dialog = new Dialog();
 
 import messages from './sample/chat.json';
 
@@ -165,14 +168,20 @@ interface Message {
 }
 
 const list: Message[] = reactive([...messages]);
-
 const listening = ref(false);
-
 const bottom = ref<HTMLDivElement>(document.createElement('div'));
-const keepingBottom = ref(true);
+
+function startInput() {
+	listening.value = true;
+
+	const editor = dialog.input();
+
+	editor.startRecord();
+}
 
 function appendMessage() {
 	listening.value = false;
+
 	list.push({
 		bot: false,
 		pending: true,
@@ -180,9 +189,7 @@ function appendMessage() {
 		content: '',
 	});
 
-	if (keepingBottom.value) {
-		scroll.setVerticalScrollPosition(window, bottom.value.offsetTop, 500);
-	}
+	scroll.setVerticalScrollPosition(window, bottom.value.offsetTop, 500);
 }
 
 defineOptions({ name: 'Page.InteractionPanel' });
