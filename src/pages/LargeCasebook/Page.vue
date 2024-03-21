@@ -188,18 +188,21 @@
 				</div>
 
 				<symptom-item
+					name="issue"
 					class="q-mt-lg"
 					label="患者主诉："
 					:value="casebook.symptom.issue"
 				/>
 
 				<symptom-item
+					name="current"
 					class="q-mt-sm"
 					label="现病史："
 					:value="casebook.symptom.current"
 				/>
 
 				<symptom-item
+					name="history"
 					class="q-mt-sm"
 					label="既往史："
 					:value="casebook.symptom.history"
