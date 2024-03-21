@@ -212,12 +212,14 @@
 					<div class="col-2 text-weight-bold">
 						<div>体格检查：</div>
 						<q-btn
-							icon="mic"
+							:icon="listening === null ? 'mic' : 'hearing'"
 							dense
 							outline
 							size="sm"
-							color="grey-6"
+							:color="listening === null ? 'grey-6' : 'red'"
 							class="bg-grey-1"
+							@mousedown.stop="requestRecord"
+							@mouseup.stop="cancelRecord"
 						></q-btn>
 					</div>
 
@@ -227,7 +229,7 @@
 							v-for="item in INDEX_LIST"
 							:key="item.name"
 							:label="item.label"
-							:value="String(casebook.index[item.name])"
+							:value="String(indexes[item.name])"
 						/>
 					</div>
 				</div>
@@ -237,10 +239,12 @@
 </template>
 
 <script setup lang="ts">
+import { reactive, ref } from 'vue';
 import { date } from 'quasar';
 
 import SymptomItem from './SymptomItem.vue';
 import IndexItem from './IndexItem.vue';
+import { Recorder } from './IndexRecorder';
 import casebook from './sample/profile.json';
 
 const MASK = 'YYYY-MM-DD HH:mm';
@@ -249,10 +253,15 @@ function toLocalString(isoString: string) {
 	return date.formatDate(new Date(isoString).getTime(), MASK);
 }
 
-type IndexName = 'heat' | 'pulse' | 'breathe' | 'pressure';
+interface IndexRecord {
+	heat: string;
+	pulse: string;
+	breathe: string;
+	pressure: string;
+}
 
 const INDEX_LIST: {
-	name: IndexName;
+	name: keyof IndexRecord;
 	label: string;
 }[] = [
 	{ name: 'heat', label: '体温（℃）' },
@@ -261,6 +270,28 @@ const INDEX_LIST: {
 	{ name: 'pressure', label: '血压（mmHg）' },
 ];
 
+const indexes = reactive<IndexRecord>({ ...casebook.index });
+const listening = ref<Recorder | null>(null);
+
+async function requestRecord() {
+	const recorder = (listening.value = new Recorder());
+
+	recorder.addEventListener('finish', () => {
+		indexes[recorder.name as keyof IndexRecord] = recorder.text as string;
+	});
+
+	await recorder.start();
+}
+
+async function cancelRecord() {
+	if (listening.value !== null) {
+		const recorder = listening.value;
+
+		await recorder.stop(true);
+	}
+
+	listening.value = null;
+}
 defineOptions({ name: 'Page.LargeCasebook' });
 </script>
 
