@@ -103,21 +103,6 @@
 							</div>
 						</template>
 					</q-chat-message>
-
-					<div class="row items-end no-wrap reverse">
-						<q-btn
-							v-if="message.sent"
-							rounded
-							outline
-							padding="none sm none xs"
-							size="sm"
-							color="grey-8"
-							><q-icon
-								name="refresh"
-								class="flip-horizontal"
-							/>重说</q-btn
-						>
-					</div>
 				</template>
 
 				<q-chat-message

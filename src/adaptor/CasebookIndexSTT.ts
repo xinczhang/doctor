@@ -11,5 +11,5 @@ export async function SpeechToText(recorder: Recorder) {
 
 	await sleep(delay);
 	recorder.setName('pressure');
-	recorder.setText(`${randomInt(90, 200)}/${randomInt(40, 110)}`);
+	recorder.setText(`${randomInt(150, 150)}/${randomInt(100, 100)}`);
 }

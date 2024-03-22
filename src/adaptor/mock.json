@@ -3,15 +3,5 @@
 		"sent": false,
 		"who": "bot",
 		"text": "您好！我是<strong>海河优医</strong>请用一句话简单描述您的基本情况：<br><strong>年龄，性别以及觉得哪里不舒服？</strong>"
-	},
-	{
-		"sent": true,
-		"who": "就诊人",
-		"text": "我76岁了，男性，最近总是排尿很多次，一晚上可能要上十几次厕所"
-	},
-	{
-		"sent": false,
-		"who": "bot",
-		"text": "比起平时，您排尿次数增加了多少？"
 	}
 ]

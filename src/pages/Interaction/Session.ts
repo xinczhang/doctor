@@ -30,7 +30,9 @@ export class Recorder extends EventTarget {
 		this.#recording = true;
 
 		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		const recorder = (this.#recorder = new MediaRecorder(stream));
+		const recorder = (this.#recorder = new MediaRecorder(stream, {
+			mimeType: 'audio/webm',
+		}));
 		const chunks: Blob[] = [];
 
 		const textSetter = (text: string) => {
@@ -39,7 +41,7 @@ export class Recorder extends EventTarget {
 
 		recorder.addEventListener('stop', async () => {
 			if (this.#reserved) {
-				const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+				const blob = new Blob(chunks, { type: 'audio/webm' });
 
 				this.setAudio(blob);
 				await SpeechToText(blob, textSetter);
